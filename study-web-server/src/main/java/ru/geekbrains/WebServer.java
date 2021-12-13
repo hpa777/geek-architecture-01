@@ -14,12 +14,18 @@ public class WebServer {
         try (ServerSocket serverSocket = new ServerSocket(config.getPort())) {
             System.out.printf("Server started at port %d!%n", config.getPort());
             RequestParser requestParser = new RequestParser();
+            ResponseMaker responseMaker = new ResponseMaker();
+            FileService fileService = new FileService(config.getWwwHome());
 
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("New client connected!");
 
-                new Thread(new RequestHandler(SocketService.createSocketService(socket), requestParser, config)).start();
+                new Thread(new RequestHandler(
+                        SocketService.createSocketService(socket),
+                        requestParser,
+                        fileService,
+                        responseMaker)).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
