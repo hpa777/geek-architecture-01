@@ -15,20 +15,22 @@ public class ResponseMaker {
     }
 
     public HttpResponse makeNotFound() {
-        return new HttpResponse(
-                null,
-                "<h1>Файл не найден!</h1>",
-                HttpResponse.STATUS.NOT_FOUND);
+        return HttpResponse.createBuilder()
+                .withBody("<h1>Файл не найден!</h1>")
+                .withStatus(HttpResponse.STATUS.NOT_FOUND).build();
     }
 
     public HttpResponse makeNotAllowed() {
-        return new HttpResponse(
-                null,
-                "<h1>Метод не поддерживается!</h1>",
-                HttpResponse.STATUS.METHOD_NOT_ALLOWED);
+        return HttpResponse.createBuilder()
+                .withBody("<h1>Метод не поддерживается!</h1>")
+                .withStatus(HttpResponse.STATUS.METHOD_NOT_ALLOWED)
+                .build();
     }
 
     public HttpResponse makeContent(String content) {
-        return new HttpResponse(null, content, HttpResponse.STATUS.OK);
+        return HttpResponse.createBuilder()
+                .withBody(content)
+                .withStatus(HttpResponse.STATUS.OK)
+                .build();
     }
 }

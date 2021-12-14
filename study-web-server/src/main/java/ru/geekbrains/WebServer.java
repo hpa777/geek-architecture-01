@@ -1,7 +1,5 @@
 package ru.geekbrains;
 
-import ru.geekbrains.config.Config;
-import ru.geekbrains.config.ConfigFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,13 +7,58 @@ import java.net.Socket;
 
 public class WebServer {
 
-    public static void main(String[] args) {
-        Config config = ConfigFactory.create(args);
-        try (ServerSocket serverSocket = new ServerSocket(config.getPort())) {
-            System.out.printf("Server started at port %d!%n", config.getPort());
-            RequestParser requestParser = new RequestParser();
-            ResponseMaker responseMaker = new ResponseMaker();
-            FileService fileService = new FileService(config.getWwwHome());
+    private WebServer() {
+    }
+
+    private RequestParser requestParser;
+
+    private ResponseMaker responseMaker;
+
+    private FileService fileService;
+
+    private int port;
+
+    public static Config configWebServer() {
+        return new Config();
+    }
+
+    public static class Config {
+
+        private final WebServer webServer;
+
+        private Config() {
+            this.webServer = new WebServer();
+        }
+
+        public Config createFileService(String homeDir) {
+            this.webServer.fileService = new FileService(homeDir);
+            return this;
+        }
+
+        public Config createRequestParser() {
+            this.webServer.requestParser = new RequestParser();
+            return this;
+        }
+
+        public Config createResponseMaker() {
+            this.webServer.responseMaker = new ResponseMaker();
+            return this;
+        }
+
+        public Config setPort(int port) {
+            this.webServer.port = port;
+            return this;
+        }
+
+        public WebServer config() {
+            return this.webServer;
+        }
+
+    }
+
+    public void start() {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.printf("Server started at port %d!%n", port);
 
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -31,4 +74,5 @@ public class WebServer {
             e.printStackTrace();
         }
     }
+
 }

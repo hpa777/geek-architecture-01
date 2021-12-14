@@ -4,19 +4,16 @@ import java.util.Map;
 
 public class HttpRequest {
 
-    private final String method;
+    private String method;
 
-    private final String url;
+    private String url;
 
-    private final Map<String, String> headers;
+    private Map<String, String> headers;
 
-    private final String body;
+    private String body;
 
-    public HttpRequest(String method, String url, Map<String, String> headers, String body) {
-        this.method = method;
-        this.url = url;
-        this.headers = headers;
-        this.body = body;
+    public HttpRequest() {
+
     }
 
     public String getMethod() {
@@ -33,6 +30,43 @@ public class HttpRequest {
 
     public String getBody() {
         return body;
+    }
+
+    public static Builder createBuilder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private final HttpRequest request;
+
+        private Builder() {
+            this.request = new HttpRequest();
+        }
+
+        public Builder withMethod(String method) {
+            this.request.method = method;
+            return this;
+        }
+
+        public Builder withUrl(String url) {
+            this.request.url = url;
+            return this;
+        }
+
+        public Builder withBody(String body) {
+            this.request.body = body;
+            return this;
+        }
+
+        public Builder withHeaders(Map<String, String> headers) {
+            this.request.headers = headers;
+            return this;
+        }
+
+        public HttpRequest build() {
+            return this.request;
+        }
     }
 
     @Override

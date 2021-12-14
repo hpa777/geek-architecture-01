@@ -5,6 +5,9 @@ import java.util.Map;
 
 public class HttpResponse {
 
+    private HttpResponse() {
+    }
+
     public enum STATUS {
         OK("OK", 200),
         NOT_FOUND("NOT_FOUND", 404),
@@ -27,23 +30,11 @@ public class HttpResponse {
         }
     }
 
-    private final Map<String, String> headers;
+    private Map<String, String> headers;
 
-    private final String body;
+    private String body;
 
-    private final STATUS status;
-
-    public HttpResponse(Map<String, String> headers, String body, STATUS status) {
-        if (headers == null) {
-            this.headers = new HashMap<>();
-            this.headers.put("Content-Type", "text/html; charset=utf-8");
-        } else {
-            this.headers = headers;
-        }
-        this.body = body;
-        this.status = status;
-    }
-
+    private STATUS status;
 
     @Override
     public String toString() {
@@ -53,5 +44,41 @@ public class HttpResponse {
         result.append("\n");
         result.append(body);
         return result.toString();
+    }
+
+    public static Builder createBuilder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private final HttpResponse httpResponse;
+
+        private Builder() {
+            this.httpResponse = new HttpResponse();
+        }
+
+        public Builder withHeaders(Map<String, String> headers) {
+            this.httpResponse.headers = headers;
+            return this;
+        }
+
+        public Builder withBody(String body) {
+            this.httpResponse.body = body;
+            return this;
+        }
+
+        public Builder withStatus(STATUS status) {
+            this.httpResponse.status = status;
+            return this;
+        }
+
+        public HttpResponse build() {
+            if (this.httpResponse.headers == null) {
+                this.httpResponse.headers = new HashMap<>();
+                this.httpResponse.headers.put("Content-Type", "text/html; charset=utf-8");
+            }
+            return this.httpResponse;
+        }
     }
 }
