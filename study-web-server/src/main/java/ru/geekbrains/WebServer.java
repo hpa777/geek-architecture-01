@@ -1,6 +1,8 @@
 package ru.geekbrains;
 
 
+import ru.geekbrains.services.SocketServiceFactory;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -65,7 +67,7 @@ public class WebServer {
                 System.out.println("New client connected!");
 
                 new Thread(new RequestHandler(
-                        SocketService.createSocketService(socket),
+                        SocketServiceFactory.create(socket),
                         requestParser,
                         fileService,
                         responseMaker)).start();
