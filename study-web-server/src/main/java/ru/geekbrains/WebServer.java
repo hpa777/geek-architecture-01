@@ -1,6 +1,7 @@
 package ru.geekbrains;
 
 
+import ru.geekbrains.services.RequestParserFactory;
 import ru.geekbrains.services.SocketServiceFactory;
 
 import java.io.IOException;
@@ -12,7 +13,6 @@ public class WebServer {
     private WebServer() {
     }
 
-    private RequestParser requestParser;
 
     private ResponseMaker responseMaker;
 
@@ -37,10 +37,7 @@ public class WebServer {
             return this;
         }
 
-        public Config createRequestParser() {
-            this.webServer.requestParser = new RequestParser();
-            return this;
-        }
+
 
         public Config createResponseMaker() {
             this.webServer.responseMaker = new ResponseMaker();
@@ -68,7 +65,7 @@ public class WebServer {
 
                 new Thread(new RequestHandler(
                         SocketServiceFactory.create(socket),
-                        requestParser,
+                        RequestParserFactory.create(),
                         fileService,
                         responseMaker)).start();
             }

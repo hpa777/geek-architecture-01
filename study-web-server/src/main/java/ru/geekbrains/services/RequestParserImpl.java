@@ -1,4 +1,4 @@
-package ru.geekbrains;
+package ru.geekbrains.services;
 
 import ru.geekbrains.domain.HttpRequest;
 
@@ -6,7 +6,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestParser {
+class RequestParserImpl implements RequestParser {
 
     public HttpRequest parseRequest(Deque<String> rawRequest) {
         String[] firstLine = rawRequest.pollFirst().split(" ");

@@ -2,6 +2,7 @@ package ru.geekbrains;
 
 import ru.geekbrains.domain.HttpRequest;
 import ru.geekbrains.domain.HttpResponse;
+import ru.geekbrains.services.RequestParser;
 import ru.geekbrains.services.SocketService;
 
 import java.io.IOException;
