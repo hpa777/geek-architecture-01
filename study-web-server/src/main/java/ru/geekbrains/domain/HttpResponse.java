@@ -8,38 +8,16 @@ public class HttpResponse {
     private HttpResponse() {
     }
 
-    public enum STATUS {
-        OK("OK", 200),
-        NOT_FOUND("NOT_FOUND", 404),
-        METHOD_NOT_ALLOWED("METHOD_NOT_ALLOWED", 405);
-
-        private final String message;
-        private final Integer code;
-
-        STATUS(String message, Integer code) {
-            this.message = message;
-            this.code = code;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public Integer getCode() {
-            return code;
-        }
-    }
-
     private Map<String, String> headers;
 
     private String body;
 
-    private STATUS status;
+    private HTTP_STATUS HTTPStatus;
 
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append(String.format("HTTP/1.1 %d %s%n", status.getCode(), status.getMessage()));
+        result.append(String.format("HTTP/1.1 %d %s%n", HTTPStatus.getCode(), HTTPStatus.getMessage()));
         headers.forEach((k, v) -> result.append(String.format("%s: %s%n", k, v)));
         result.append("\n");
         result.append(body);
@@ -68,8 +46,8 @@ public class HttpResponse {
             return this;
         }
 
-        public Builder withStatus(STATUS status) {
-            this.httpResponse.status = status;
+        public Builder withStatus(HTTP_STATUS HTTPStatus) {
+            this.httpResponse.HTTPStatus = HTTPStatus;
             return this;
         }
 
