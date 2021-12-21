@@ -1,8 +1,7 @@
 package ru.geekbrains;
 
 
-import ru.geekbrains.services.RequestParserFactory;
-import ru.geekbrains.services.SocketServiceFactory;
+import ru.geekbrains.services.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -33,11 +32,9 @@ public class WebServer {
         }
 
         public Config createFileService(String homeDir) {
-            this.webServer.fileService = new FileService(homeDir);
+            this.webServer.fileService = FileServiceFactory.create(homeDir);
             return this;
         }
-
-
 
         public Config createResponseMaker() {
             this.webServer.responseMaker = new ResponseMaker();

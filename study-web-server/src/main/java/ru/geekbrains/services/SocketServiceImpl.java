@@ -52,7 +52,7 @@ class SocketServiceImpl implements SocketService{
     @Override
     public void close() throws IOException {
         if (!socket.isClosed()) {
-            socket.close();
+           socket.close();
         }
     }
 }

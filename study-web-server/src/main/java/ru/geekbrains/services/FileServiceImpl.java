@@ -1,15 +1,15 @@
-package ru.geekbrains;
+package ru.geekbrains.services;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class FileService {
+class FileServiceImpl implements FileService {
 
     private final String wwwHome;
 
-    public FileService(String wwwHome) {
+    public FileServiceImpl(String wwwHome) {
         this.wwwHome = wwwHome;
     }
 

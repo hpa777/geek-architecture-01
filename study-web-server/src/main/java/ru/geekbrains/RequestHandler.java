@@ -2,6 +2,8 @@ package ru.geekbrains;
 
 import ru.geekbrains.domain.HttpRequest;
 import ru.geekbrains.domain.HttpResponse;
+import ru.geekbrains.services.FileService;
+
 import ru.geekbrains.services.RequestParser;
 import ru.geekbrains.services.SocketService;
 
@@ -34,8 +36,9 @@ public class RequestHandler implements Runnable {
         try {
             socketService.close();
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            e.printStackTrace();
         }
+
         System.out.println("Client disconnected!");
     }
 }
