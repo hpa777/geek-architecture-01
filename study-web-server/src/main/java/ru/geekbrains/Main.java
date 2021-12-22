@@ -9,7 +9,6 @@ public class Main {
         Config config = ConfigFactory.create(args);
         WebServer.configWebServer()
                 .createFileService(config.getWwwHome())
-                .createResponseMaker()
                 .setPort(config.getPort())
                 .config()
                 .start();
