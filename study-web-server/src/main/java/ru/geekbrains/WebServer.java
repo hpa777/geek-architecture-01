@@ -1,6 +1,8 @@
 package ru.geekbrains;
 
 
+import ru.geekbrains.handler.MethodHandlerFactory;
+import ru.geekbrains.handler.RequestHandler;
 import ru.geekbrains.services.*;
 
 import java.io.IOException;
@@ -12,8 +14,6 @@ public class WebServer {
     private WebServer() {
     }
 
-
-    private ResponseMaker responseMaker;
 
     private FileService fileService;
 
@@ -36,10 +36,6 @@ public class WebServer {
             return this;
         }
 
-        public Config createResponseMaker() {
-            this.webServer.responseMaker = new ResponseMaker();
-            return this;
-        }
 
         public Config setPort(int port) {
             this.webServer.port = port;
@@ -56,15 +52,19 @@ public class WebServer {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.printf("Server started at port %d!%n", port);
 
+            ResponseSerializer responseSerializer = ResponseSerializerFactory.create();
+
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("New client connected!");
 
+                SocketService socketService = SocketServiceFactory.create(socket);
+
                 new Thread(new RequestHandler(
-                        SocketServiceFactory.create(socket),
+                        socketService,
                         RequestParserFactory.create(),
-                        fileService,
-                        responseMaker)).start();
+                        MethodHandlerFactory.create(socketService, fileService, responseSerializer)
+                        )).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

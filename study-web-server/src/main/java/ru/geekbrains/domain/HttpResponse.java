@@ -14,16 +14,17 @@ public class HttpResponse {
 
     private HTTP_STATUS HTTPStatus;
 
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append(String.format("HTTP/1.1 %d %s%n", HTTPStatus.getCode(), HTTPStatus.getMessage()));
-        headers.forEach((k, v) -> result.append(String.format("%s: %s%n", k, v)));
-        result.append("\n");
-        result.append(body);
-        return result.toString();
+    public Map<String, String> getHeaders() {
+        return headers;
     }
 
+    public String getBody() {
+        return body;
+    }
+
+    public HTTP_STATUS getHTTPStatus() {
+        return HTTPStatus;
+    }
     public static Builder createBuilder() {
         return new Builder();
     }
