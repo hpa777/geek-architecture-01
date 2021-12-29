@@ -16,7 +16,7 @@ public class UserMapper {
     public UserMapper(Connection conn) {
         this.conn = conn;
         try {
-            this.selectUser = conn.prepareStatement("select id, username, password from users where id = ?;");
+            this.selectUser = conn.prepareStatement("select id, login, password from users where id = ?;");
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
@@ -31,7 +31,7 @@ public class UserMapper {
             selectUser.setLong(1, id);
             ResultSet rs = selectUser.executeQuery();
             if (rs.next()) {
-                user = new User(rs.getInt(1), rs.getString(2), rs.getString(3));
+                user = new User(rs.getLong(1), rs.getString(2), rs.getString(3));
                 identityMap.put(id, user);
                 return Optional.of(user);
             }
