@@ -1,6 +1,8 @@
 package ru.geekbrains;
 
 
+
+import ru.geekbrains.handler.MethodHandler;
 import ru.geekbrains.handler.MethodHandlerFactory;
 import ru.geekbrains.handler.RequestHandler;
 import ru.geekbrains.services.*;
@@ -11,48 +13,25 @@ import java.net.Socket;
 
 public class WebServer {
 
-    private WebServer() {
-    }
 
+    private final MethodHandler methodHandler;
 
-    private FileService fileService;
+    private final RequestParser requestParser;
 
-    private int port;
+    private final ResponseSerializer responseSerializer;
 
-    public static Config configWebServer() {
-        return new Config();
-    }
+    private final int port;
 
-    public static class Config {
-
-        private final WebServer webServer;
-
-        private Config() {
-            this.webServer = new WebServer();
-        }
-
-        public Config createFileService(String homeDir) {
-            this.webServer.fileService = FileServiceFactory.create(homeDir);
-            return this;
-        }
-
-
-        public Config setPort(int port) {
-            this.webServer.port = port;
-            return this;
-        }
-
-        public WebServer config() {
-            return this.webServer;
-        }
-
+    public WebServer(ru.geekbrains.config.Config config) {
+        methodHandler = MethodHandlerFactory.create(FileServiceFactory.create(config.getWwwHome()));
+        requestParser = RequestParserFactory.create();
+        responseSerializer = ResponseSerializerFactory.create();
+        port = config.getPort();
     }
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.printf("Server started at port %d!%n", port);
-
-            ResponseSerializer responseSerializer = ResponseSerializerFactory.create();
 
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -62,9 +41,9 @@ public class WebServer {
 
                 new Thread(new RequestHandler(
                         socketService,
-                        RequestParserFactory.create(),
-                        MethodHandlerFactory.create(socketService, fileService, responseSerializer)
-                        )).start();
+                        requestParser,
+                        methodHandler,
+                        responseSerializer)).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

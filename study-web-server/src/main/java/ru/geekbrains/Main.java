@@ -7,10 +7,7 @@ public class Main {
 
     public static void main(String[] args) {
         Config config = ConfigFactory.create(args);
-        WebServer.configWebServer()
-                .createFileService(config.getWwwHome())
-                .setPort(config.getPort())
-                .config()
-                .start();
+        WebServer webServer = new WebServer(config);
+        webServer.start();
     }
 }

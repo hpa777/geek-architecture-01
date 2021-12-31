@@ -16,7 +16,7 @@ import java.util.TreeMap;
 
 public class MethodHandlerFactory {
 
-    public static MethodHandler create (SocketService socketService, FileService fileService, ResponseSerializer responseSerializer) {
+    public static MethodHandler create (FileService fileService) {
         Reflections reflections = new Reflections("ru.geekbrains.handler");
         Map<Integer,Class<?>> map = new TreeMap<>(Collections.reverseOrder());
         reflections.getTypesAnnotatedWith(Handler.class).stream().forEach((c)->map.put(c.getAnnotation(Handler.class).order(), c));
@@ -24,8 +24,8 @@ public class MethodHandlerFactory {
         for (Class<?> c : map.values()) {
             String method = c.getAnnotation(Handler.class).method();
             try {
-                Constructor constructor = c.getConstructor(SocketService.class, FileService.class, ResponseSerializer.class, String.class, MethodHandler.class);
-                next = (MethodHandler) constructor.newInstance(socketService, fileService, responseSerializer, method, next);
+                Constructor constructor = c.getConstructor(FileService.class, String.class, MethodHandler.class);
+                next = (MethodHandler) constructor.newInstance(fileService, method, next);
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
