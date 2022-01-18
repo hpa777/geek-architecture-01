@@ -11,8 +11,8 @@ import ru.geekbrains.services.SocketService;
 public class GetMethodHandler extends MethodHandler {
 
 
-    public GetMethodHandler(SocketService socketService, FileService fileService, ResponseSerializer responseSerializer, String method, MethodHandler next) {
-        super(socketService, fileService, responseSerializer, method, next);
+    public GetMethodHandler(FileService fileService, String method, MethodHandler next) {
+        super(fileService, method, next);
     }
 
     @Override

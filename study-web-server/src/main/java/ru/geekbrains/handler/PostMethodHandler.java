@@ -11,8 +11,8 @@ import ru.geekbrains.services.SocketService;
 public class PostMethodHandler extends MethodHandler {
 
 
-    public PostMethodHandler(SocketService socketService, FileService fileService, ResponseSerializer responseSerializer, String method, MethodHandler next) {
-        super(socketService, fileService, responseSerializer, method, next);
+    public PostMethodHandler(FileService fileService, String method, MethodHandler next) {
+        super(fileService, method, next);
     }
 
     @Override

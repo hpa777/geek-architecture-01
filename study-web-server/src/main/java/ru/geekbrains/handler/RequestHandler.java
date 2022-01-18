@@ -1,9 +1,9 @@
 package ru.geekbrains.handler;
 
 import ru.geekbrains.domain.HttpRequest;
-
-
+import ru.geekbrains.domain.HttpResponse;
 import ru.geekbrains.services.RequestParser;
+import ru.geekbrains.services.ResponseSerializer;
 import ru.geekbrains.services.SocketService;
 
 import java.io.IOException;
@@ -17,10 +17,13 @@ public class RequestHandler implements Runnable {
 
     private final MethodHandler methodHandler;
 
-    public RequestHandler(SocketService socketService, RequestParser requestParser, MethodHandler methodHandler) {
+    private final ResponseSerializer responseSerializer;
+
+    public RequestHandler(SocketService socketService, RequestParser requestParser, MethodHandler methodHandler, ResponseSerializer responseSerializer) {
         this.socketService = socketService;
         this.requestParser = requestParser;
         this.methodHandler = methodHandler;
+        this.responseSerializer = responseSerializer;
     }
 
     @Override
@@ -28,8 +31,8 @@ public class RequestHandler implements Runnable {
         Deque<String> rawRequest = socketService.readRequest();
         HttpRequest httpRequest = requestParser.parseRequest(rawRequest);
 
-        methodHandler.handle(httpRequest);
-
+        HttpResponse response = methodHandler.handle(httpRequest);
+        socketService.writeResponse(responseSerializer.serialize(response));
 
         try {
             socketService.close();
